@@ -15,7 +15,7 @@ static int read_int(const byte*& r)
 int Cxif_key_r::import(data_ref s)
 {
 	const t_xif_header_fast& h = *reinterpret_cast<const t_xif_header_fast*>(s.data());
-	if (s.size() < sizeof(t_xif_header_fast) + 8
+	if ((ssize_t)s.size() < (ssize_t)(sizeof(t_xif_header_fast) + 8)
 		|| h.id != file_id
 		|| h.version != file_version_fast)
 		return 1;

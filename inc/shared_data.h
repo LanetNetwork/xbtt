@@ -109,5 +109,5 @@ inline shared_data file_get(const std::string& fname)
 inline int file_put(const std::string& fname, data_ref v)
 {
 	cfile f(fname, "wb");
-	return !f || f.write(v.data(), v.size()) != v.size();
+	return !f || (ssize_t)f.write(v.data(), v.size()) != (ssize_t)v.size();
 }

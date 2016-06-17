@@ -33,7 +33,7 @@ std::string hex_decode(str_ref v)
 {
 	std::string r;
 	r.resize(v.size() >> 1);
-	for (size_t i = 0; i + 2 <= v.size(); i += 2)
+	for (size_t i = 0; (ssize_t)(i + 2) <= (ssize_t)v.size(); i += 2)
 	{
 		int a = hex_decode(v[i]);
 		r[i >> 1] = a << 4 | hex_decode(v[i + 1]);
@@ -71,14 +71,14 @@ std::string uri_decode(str_ref v)
 {
 	std::string r;
 	r.reserve(v.size());
-	for (size_t i = 0; i < v.size(); i++)
+	for (size_t i = 0; (ssize_t)i < (ssize_t)v.size(); i++)
 	{
 		char c = v[i];
 		switch (c)
 		{
 		case '%':
 			{
-				if (i + 2 >= v.size())
+				if ((ssize_t)(i + 2) >= (ssize_t)v.size())
 					return std::string();
 				int l = v[++i];
 				r += hex_decode(l) << 4 | hex_decode(v[++i]);

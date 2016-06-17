@@ -193,7 +193,7 @@ void Cconnection::read(const std::string& v)
 		static std::ofstream f("xbt_tracker_gzip.log");
 		f << srv_time() << '\t' << v[5] << '\t' << s.size() << '\t' << s2.size() << std::endl;
 #endif
-		if (s2.size() + 24 < s.size())
+		if ((ssize_t)(s2.size()) + 24 < (ssize_t)s.size())
 		{
 			h += "Content-Encoding: gzip\r\n";
 			s = to_string(s2);
