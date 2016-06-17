@@ -1,8 +1,5 @@
 #pragma once
 
-#ifdef WIN32
-#define FD_SETSIZE 1024
-#endif
 #define NOMINMAX
 
 #include <array>

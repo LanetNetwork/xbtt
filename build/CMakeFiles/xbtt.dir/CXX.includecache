@@ -153,8 +153,6 @@ string
 -
 data_ref.h
 ../inc/data_ref.h
-winsock2.h
--
 arpa/inet.h
 -
 cerrno
@@ -403,10 +401,10 @@ find_ptr.h
 /home/pf/work/src/opensource/xbtt/find_ptr.h
 
 /home/pf/work/src/opensource/xbtt/epoll.cpp
-epoll.h
-/home/pf/work/src/opensource/xbtt/epoll.h
 unistd.h
 -
+epoll.h
+/home/pf/work/src/opensource/xbtt/epoll.h
 
 /home/pf/work/src/opensource/xbtt/inc/bt_misc.h
 string
@@ -515,8 +513,6 @@ virtual_binary.h
 /home/pf/work/src/opensource/xbtt/xbtt.cpp
 stdafx.h
 /home/pf/work/src/opensource/xbtt/stdafx.h
-windows/nt_service.h
--
 config.h
 /home/pf/work/src/opensource/xbtt/config.h
 server.h

@@ -315,20 +315,12 @@ int Cbvalue::read(char* d) const
 	switch (m_value_type)
 	{
 	case vt_int:
-#ifdef WIN32
-		sprintf(d, "i%I64d", m_int);
-#else
 		sprintf(d, "i%lld", m_int);
-#endif
 		w += strlen(d);
 		*w++ = 'e';
 		return w - d;
 	case vt_string:
-#ifdef WIN32
-		sprintf(w, "%d:", m_string->size());
-#else
 		sprintf(w, "%zu:", m_string->size());
-#endif
 		w += n(m_string->size()).size() + 1;
 		memcpy(w, m_string->data(), m_string->size());
 		w += m_string->size();
@@ -346,11 +338,7 @@ int Cbvalue::read(char* d) const
 			*w++ = 'd';
 			BOOST_FOREACH(auto& i, *m_map)
 			{
-#ifdef WIN32
-				sprintf(w, "%d:", i.first.size());
-#else
 				sprintf(w, "%zu:", i.first.size());
-#endif
 				w += n(i.first.size()).size() + 1;
 				memcpy(w, i.first.data(), i.first.size());
 				w += i.first.size();

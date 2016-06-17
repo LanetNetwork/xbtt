@@ -3,15 +3,11 @@
 #include <cstring>
 #include <cstdio>
 
-#ifdef WIN32
-#pragma comment(lib, "ws2_32.lib")
-#else
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <fcntl.h>
 #include <netdb.h>
 #include <unistd.h>
-#endif
 
 #ifndef INADDR_NONE
 const int INADDR_NONE = -1;
@@ -184,23 +180,6 @@ std::string Csocket::error2a(int v)
 	case WSAETOOMANYREFS: return "ETOOMANYREFS";
 	case WSAEUSERS: return "EUSERS";
 	case WSAEWOULDBLOCK: return "EWOULDBLOCK";
-#ifdef WIN32
-	case WSAECANCELLED: return "ECANCELLED";
-	case WSAEDISCON: return "EDISCON";
-	case WSAEINVALIDPROCTABLE: return "EINVALIDPROCTABLE";
-	case WSAEINVALIDPROVIDER: return "EINVALIDPROVIDER";
-	case WSAENOMORE: return "ENOMORE";
-	case WSAEPROVIDERFAILEDINIT: return "EPROVIDERFAILEDINIT";
-	case WSAEREFUSED: return "EREFUSED";
-	case WSANOTINITIALISED: return "NOTINITIALISED";
-	case WSASERVICE_NOT_FOUND: return "SERVICE_NOT_FOUND";
-	case WSASYSCALLFAILURE: return "SYSCALLFAILURE";
-	case WSASYSNOTREADY: return "SYSNOTREADY";
-	case WSATYPE_NOT_FOUND: return "TYPE_NOT_FOUND";
-	case WSAVERNOTSUPPORTED: return "VERNOTSUPPORTED";
-	case WSA_E_CANCELLED: return "E_CANCELLED";
-	case WSA_E_NO_MORE: return "E_NO_MORE";
-#endif
 	}
 	char b[12];
 	sprintf(b, "%d", v);
@@ -216,14 +195,5 @@ std::string Csocket::inet_ntoa(int v)
 
 int Csocket::start_up()
 {
-#ifdef WIN32
-	static bool done = false;
-	if (done)
-		return 0;
-	done = true;
-	WSADATA wsadata;
-	if (WSAStartup(MAKEWORD(2, 0), &wsadata))
-		return 1;
-#endif
 	return 0;
 }

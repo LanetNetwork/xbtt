@@ -84,11 +84,7 @@ Csql_query& Csql_query::p_raw(data_ref v)
 Csql_query& Csql_query::operator()(long long v)
 {
 	char b[21];
-#ifdef WIN32
-	sprintf(b, "%I64d", v);
-#else
 	sprintf(b, "%lld", v);
-#endif
 	p_raw(data_ref(b));
 	return *this;
 }

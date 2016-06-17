@@ -216,12 +216,6 @@ void Cconnection::read(const std::string& v)
 		}
 	}
 	h += "\r\n";
-#ifdef WIN32
-	m_write_b = shared_data(h.size() + s.size());
-	memcpy(m_write_b.data(), h);
-	memcpy(m_write_b.data() + h.size(), s);
-	int r = m_s.send(m_write_b);
-#else
 	std::array<iovec, 2> d;
 	d[0].iov_base = const_cast<char*>(h.data());
 	d[0].iov_len = h.size();
@@ -236,7 +230,6 @@ void Cconnection::read(const std::string& v)
 	m.msg_controllen = 0;
 	m.msg_flags = 0;
 	int r = sendmsg(m_s, &m, MSG_NOSIGNAL);
-#endif
 	if (r == SOCKET_ERROR)
 	{
 		if (WSAGetLastError() != WSAECONNRESET)
@@ -244,7 +237,6 @@ void Cconnection::read(const std::string& v)
 	}
 	else if (r != h.size() + s.size())
 	{
-#ifndef WIN32
 		if (r < h.size())
 		{
 			m_write_b = shared_data(h.size() + s.size());
@@ -256,7 +248,6 @@ void Cconnection::read(const std::string& v)
 			m_write_b = make_shared_data(s);
 			r -= h.size();
 		}
-#endif
 		m_r = m_write_b;
 		m_r.advance_begin(r);
 	}

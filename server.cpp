@@ -508,7 +508,6 @@ int srv_run(const std::string& table_prefix, bool use_sql, const std::string& co
 #ifndef NDEBUG
 	// test_announce();
 #endif
-#ifndef WIN32
 	if (m_config.m_daemon)
 	{
 		if (daemon(true, false))
@@ -524,7 +523,6 @@ int srv_run(const std::string& table_prefix, bool use_sql, const std::string& co
 		if (sigaction(SIGPIPE, &act, NULL))
 			std::cerr << "sigaction failed" << std::endl;
 	}
-#endif
 #ifdef EPOLL
 	std::array<epoll_event, 64> events;
 #else

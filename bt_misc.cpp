@@ -6,11 +6,7 @@
 #include <ctime>
 #include <socket.h>
 
-#ifdef WIN32
-#pragma comment(lib, "ws2_32")
-#else
 #include <syslog.h>
-#endif
 
 #include "inc/bt_misc.h"
 
@@ -363,11 +359,7 @@ std::string forward_slashes(std::string v)
 
 std::string native_slashes(const std::string& v)
 {
-#ifdef WIN32
-	return backward_slashes(v);
-#else
 	return forward_slashes(v);
-#endif
 }
 
 int hms2i(int h, int m, int s)
@@ -401,9 +393,5 @@ std::string mk_sname(std::string v)
 
 void xbt_syslog(const std::string& v)
 {
-#ifdef WIN32
-	std::cerr << v << std::endl;
-#else
 	syslog(LOG_ERR, "%s", v.c_str());
-#endif
 }

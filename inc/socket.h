@@ -6,11 +6,6 @@
 
 #include "data_ref.h"
 
-#ifdef WIN32
-#include <winsock2.h>
-
-typedef int socklen_t;
-#else
 #include <arpa/inet.h>
 #include <cerrno>
 #include <netinet/in.h>
@@ -69,7 +64,6 @@ typedef int SOCKET;
 
 const int INVALID_SOCKET = -1;
 const int SOCKET_ERROR = -1;
-#endif
 
 class Csocket_source : boost::noncopyable
 {
