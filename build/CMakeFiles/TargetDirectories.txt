@@ -1,7 +1,0 @@
-/home/pf/work/src/opensource/xbtt/build/CMakeFiles/install.dir
-/home/pf/work/src/opensource/xbtt/build/CMakeFiles/list_install_components.dir
-/home/pf/work/src/opensource/xbtt/build/CMakeFiles/rebuild_cache.dir
-/home/pf/work/src/opensource/xbtt/build/CMakeFiles/xbtt.dir
-/home/pf/work/src/opensource/xbtt/build/CMakeFiles/install/strip.dir
-/home/pf/work/src/opensource/xbtt/build/CMakeFiles/install/local.dir
-/home/pf/work/src/opensource/xbtt/build/CMakeFiles/edit_cache.dir
