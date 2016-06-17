@@ -1,7 +1,7 @@
 #pragma once
 
 template<class T, size_t N, class V>
-std::array<T, N> to_array(const V& v)
+static std::array<T, N> to_array(const V& v)
 {
 	assert(v.size() == N);
 	std::array<T, N> d;

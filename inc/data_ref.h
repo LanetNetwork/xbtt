@@ -172,7 +172,7 @@ inline float to_float(data_ref v)
 }
 
 template<class T>
-int try_parse(T& d, str_ref s)
+static int try_parse(T& d, str_ref s)
 {
 	if (!s)
 		return 1;
@@ -189,14 +189,14 @@ int try_parse(T& d, str_ref s)
 }
 
 template<class T>
-T parse(str_ref s)
+static T parse(str_ref s)
 {
 	T d;
 	return try_parse(d, s) ? 0 : d;
 }
 
 template<class T>
-void parse(T& d, str_ref s)
+static void parse(T& d, str_ref s)
 {
 	if (try_parse(d, s))
 		d = 0;

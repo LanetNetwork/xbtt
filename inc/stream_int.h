@@ -44,7 +44,7 @@ inline long long read_int(int cb, const void* r, const void* s_end)
 }
 
 template <class T>
-T write_int(int cb, T w0, long long v)
+static T write_int(int cb, T w0, long long v)
 {
 	unsigned char* w = reinterpret_cast<unsigned char*>(w0);
 	w += cb;
@@ -72,7 +72,7 @@ inline long long read_int_le(int cb, const void* r, const void* /*s_end*/)
 }
 
 template <class T>
-T write_int_le(int cb, T w0, long long v)
+static T write_int_le(int cb, T w0, long long v)
 {
 	unsigned char* w = reinterpret_cast<unsigned char*>(w0);
 	for (int i = 0; i < cb; i++)
