@@ -715,7 +715,7 @@ void t_torrent::select_peers(mutable_str_ref& d, const Ctracker_input& ti) const
 		d.advance_begin(6 * candidates.size());
 		return;
 	}
-	__attribute__((unused)) const char* d0 = d.begin();
+	d.begin();
 	while (c--)
 	{
 		int i = rand() % candidates.size();
@@ -888,10 +888,5 @@ t_user* find_user_by_torrent_pass(str_ref v, str_ref info_hash)
 			return user;
 	}
 	return find_ptr2(m_users_torrent_passes, to_array<char, 32>(v));
-}
-
-void srv_term()
-{
-	g_sig_term = true;
 }
 

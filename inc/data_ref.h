@@ -205,18 +205,6 @@ static void parse(T& d, str_ref s)
 inline long long to_int(str_ref v)
 {
 	return parse<long long>(v);
-	if (v.empty())
-		return 0;
-	if (!*v.end())
-		return atoll(v.data());
-	try
-	{
-		return boost::lexical_cast<long long>(v);
-	}
-	catch (boost::bad_lexical_cast&)
-	{
-	}
-	return 0;
 }
 
 inline const std::string to_string(str_ref v)

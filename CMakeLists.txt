@@ -49,7 +49,6 @@ add_executable(xbtt
 	stdafx.cpp
 	stream_reader.cpp
 	stream_writer.cpp
-	tf_misc.cpp
 	tracker_input.cpp
 	transaction.cpp
 	virtual_binary.cpp
