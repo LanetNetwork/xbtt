@@ -1,13 +1,13 @@
 Name:           xbtt
 Version:        0.2.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        XBT Torrents ReTracker
 
 License:        GPLv3
 URL:            https://github.com/LanetNetwork/xbtt
 Source0:        xbtt-0.2.9.tar.gz
 
-BuildRequires:  gcc-c++ cmake make mariadb-devel openssl-devel gperftools-devel
+BuildRequires:  gcc-c++ cmake make mariadb-devel openssl-devel gperftools-devel boost-devel
 Requires:       mariadb-libs openssl-libs gperftools-devel
 
 %description
@@ -26,8 +26,8 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 %{__mkdir_p} %{buildroot}/etc/%{name}
 %{__mkdir_p} %{buildroot}/usr/lib/systemd/system/
-%{__install} -m0644 configs/%{name}.conf.sample %{buildroot}/etc/%{name}
-%{__install} -m0644 configs/%{name}.service %{buildroot}/usr/lib/systemd/system/%{name}.service
+%{__install} -m0644 conf/%{name}.conf.sample %{buildroot}/etc/%{name}
+%{__install} -m0644 conf/%{name}.service %{buildroot}/usr/lib/systemd/system/%{name}.service
 cd build
 make install
 
