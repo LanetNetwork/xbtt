@@ -11,10 +11,12 @@ inline float read_float(const void* r)
 	return v;
 }
 
+
 inline float read_float(const void* r0, const void* /*s_end*/)
 {
 	return read_float(r0);
 }
+
 
 template <class T>
 static T write_float(T w0, float v)
@@ -23,6 +25,7 @@ static T write_float(T w0, float v)
 	memcpy(w, &v, sizeof(float));
 	return w + sizeof(float);
 }
+
 
 inline long long read_int(int cb, const void* r0)
 {
@@ -33,15 +36,18 @@ inline long long read_int(int cb, const void* r0)
 	return v;
 }
 
+
 inline long long read_int(size_t cb, data_ref s)
 {
 	return static_cast<size_t>(s.size()) < cb ? 0 : read_int(cb, s.data());
 }
 
+
 inline long long read_int(int cb, const void* r, const void* s_end)
 {
 	return read_int(cb, data_ref(r, s_end));
 }
+
 
 template <class T>
 static T write_int(int cb, T w0, long long v)
@@ -56,6 +62,7 @@ static T write_int(int cb, T w0, long long v)
 	return reinterpret_cast<T>(w + cb);
 }
 
+
 inline long long read_int_le(int cb, const void* r0)
 {
 	const unsigned char* r = reinterpret_cast<const unsigned char*>(r0);
@@ -66,10 +73,12 @@ inline long long read_int_le(int cb, const void* r0)
 	return v;
 }
 
+
 inline long long read_int_le(int cb, const void* r, const void* /*s_end*/)
 {
 	return read_int_le(cb, r);
 }
+
 
 template <class T>
 static T write_int_le(int cb, T w0, long long v)

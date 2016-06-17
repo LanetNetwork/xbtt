@@ -14,6 +14,7 @@ Cconnection::Cconnection(const Csocket& s, const sockaddr_in& a)
 	m_w = m_read_b;
 }
 
+
 int Cconnection::recv()
 {
 	int r = m_s.recv(m_w);
@@ -27,11 +28,11 @@ int Cconnection::recv()
 		int e = WSAGetLastError();
 		switch (e)
 		{
-		case WSAECONNABORTED:
-		case WSAECONNRESET:
-			return 1;
-		case WSAEWOULDBLOCK:
-			return 0;
+			case WSAECONNABORTED:
+			case WSAECONNRESET:
+				return 1;
+			case WSAEWOULDBLOCK:
+				return 0;
 		}
 		std::cerr << "recv failed: " << Csocket::error2a(e) << std::endl;
 		return 1;
@@ -54,17 +55,17 @@ int Cconnection::recv()
 		{
 			switch (m_state)
 			{
-			case 0:
-				read(std::string(&m_read_b.front(), a - &m_read_b.front()));
-				m_state = 1;
-			case 1:
-			case 3:
-				m_state += *a == '\n' ? 2 : 1;
-				break;
-			case 2:
-			case 4:
-				m_state++;
-				break;
+				case 0:
+					read(std::string(&m_read_b.front(), a - &m_read_b.front()));
+					m_state = 1;
+				case 1:
+				case 3:
+					m_state += *a == '\n' ? 2 : 1;
+					break;
+				case 2:
+				case 4:
+					m_state++;
+					break;
 			}
 			a++;
 		}
@@ -72,6 +73,7 @@ int Cconnection::recv()
 	while (state != m_state);
 	return 0;
 }
+
 
 int Cconnection::send()
 {
@@ -83,11 +85,11 @@ int Cconnection::send()
 		int e = WSAGetLastError();
 		switch (e)
 		{
-		case WSAECONNABORTED:
-		case WSAECONNRESET:
-			return 1;
-		case WSAEWOULDBLOCK:
-			return 0;
+			case WSAECONNABORTED:
+			case WSAECONNRESET:
+				return 1;
+			case WSAEWOULDBLOCK:
+				return 0;
 		}
 		std::cerr << "send failed: " << Csocket::error2a(e) << std::endl;
 		return 1;
@@ -97,6 +99,7 @@ int Cconnection::send()
 		m_write_b.clear();
 	return 0;
 }
+
 
 void Cconnection::read(const std::string& v)
 {
@@ -148,33 +151,33 @@ void Cconnection::read(const std::string& v)
 	bool gzip = true;
 	switch (a < v.size() ? v[a] : 0)
 	{
-	case 'a':
-		if (ti.valid())
-		{
-			gzip = false;
-			std::string error = srv_insert_peer(ti, false, find_user_by_torrent_pass(torrent_pass, ti.m_info_hash));
-			s = error.empty() ? srv_select_peers(ti) : (boost::format("d14:failure reason%d:%se") % error.size() % error).str();
-		}
-		break;
-	case 'd':
-		if (srv_config().m_debug)
-		{
-			h += "Content-Type: text/html; charset=us-ascii\r\n";
-			s = srv_debug(ti);
-		}
-		break;
-	case 's':
-		if (v.size() >= 7 && v[6] == 't')
-		{
-			h += "Content-Type: text/html; charset=us-ascii\r\n";
-			s = srv_statistics();
-		}
-		else if (srv_config().m_full_scrape || !ti.m_info_hash.empty())
-		{
-			gzip = srv_config().m_gzip_scrape && ti.m_info_hash.empty();
- 			s = srv_scrape(ti, find_user_by_torrent_pass(torrent_pass, ti.m_info_hash));
-		}
-		break;
+		case 'a':
+			if (ti.valid())
+			{
+				gzip = false;
+				std::string error = srv_insert_peer(ti, false, find_user_by_torrent_pass(torrent_pass, ti.m_info_hash));
+				s = error.empty() ? srv_select_peers(ti) : (boost::format("d14:failure reason%d:%se") % error.size() % error).str();
+			}
+			break;
+		case 'd':
+			if (srv_config().m_debug)
+			{
+				h += "Content-Type: text/html; charset=us-ascii\r\n";
+				s = srv_debug(ti);
+			}
+			break;
+		case 's':
+			if (v.size() >= 7 && v[6] == 't')
+			{
+				h += "Content-Type: text/html; charset=us-ascii\r\n";
+				s = srv_statistics();
+			}
+			else if (srv_config().m_full_scrape || !ti.m_info_hash.empty())
+			{
+				gzip = srv_config().m_gzip_scrape && ti.m_info_hash.empty();
+				s = srv_scrape(ti, find_user_by_torrent_pass(torrent_pass, ti.m_info_hash));
+			}
+			break;
 	}
 	if (s.empty())
 	{
@@ -239,6 +242,7 @@ void Cconnection::read(const std::string& v)
 		m_write_b.clear();
 }
 
+
 void Cconnection::process_events(int events)
 {
 	if ((events & (EPOLLIN | EPOLLPRI | EPOLLERR | EPOLLHUP) && recv())
@@ -246,6 +250,7 @@ void Cconnection::process_events(int events)
 		|| (m_state == 5 && m_write_b.empty()))
 		m_s.close();
 }
+
 
 int Cconnection::run()
 {

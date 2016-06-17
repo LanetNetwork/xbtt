@@ -10,10 +10,12 @@ Cdatabase::Cdatabase()
 	mysql_init(&m_handle);
 }
 
+
 Cdatabase::~Cdatabase()
 {
 	close();
 }
+
 
 void Cdatabase::open(const std::string& host, const std::string& user, const std::string& password, const std::string& database, bool echo_errors)
 {
@@ -25,6 +27,7 @@ void Cdatabase::open(const std::string& host, const std::string& user, const std
 	char a0 = true;
 	mysql_options(&m_handle, MYSQL_OPT_RECONNECT, &a0);
 }
+
 
 int Cdatabase::query_nothrow(const std::string& q)
 {
@@ -45,6 +48,7 @@ int Cdatabase::query_nothrow(const std::string& q)
 	return 0;
 }
 
+
 Csql_result Cdatabase::query(const std::string& q)
 {
 	if (query_nothrow(q))
@@ -55,35 +59,42 @@ Csql_result Cdatabase::query(const std::string& q)
 	return Csql_result(result);
 }
 
+
 void Cdatabase::close()
 {
 	mysql_close(&m_handle);
 }
+
 
 int Cdatabase::affected_rows()
 {
 	return mysql_affected_rows(&m_handle);
 }
 
+
 int Cdatabase::insert_id()
 {
 	return mysql_insert_id(&m_handle);
 }
+
 
 int Cdatabase::select_db(const std::string& v)
 {
 	return mysql_select_db(&m_handle, v.c_str());
 }
 
+
 void Cdatabase::set_query_log(std::ostream* v)
 {
 	m_query_log = v;
 }
 
+
 void Cdatabase::set_name(const std::string& a, std::string b)
 {
 	m_names[a] = std::move(b);
 }
+
 
 const std::string& Cdatabase::name(const std::string& v) const
 {

@@ -18,6 +18,7 @@ std::string generate_random_string(int l)
 	return v;
 }
 
+
 static int hex_decode(char v)
 {
 	if (v >= '0' && v <= '9')
@@ -28,6 +29,7 @@ static int hex_decode(char v)
 		return v - 'a' + 10;
 	return -1;
 }
+
 
 std::string hex_decode(str_ref v)
 {
@@ -41,6 +43,7 @@ std::string hex_decode(str_ref v)
 	return r;
 }
 
+
 std::string hex_encode(int l, int v)
 {
 	std::string r;
@@ -53,10 +56,12 @@ std::string hex_encode(int l, int v)
 	return r;
 }
 
+
 std::string n(long long v)
 {
 	return std::to_string(v);
 }
+
 
 std::string hex_encode(data_ref v)
 {
@@ -67,6 +72,7 @@ std::string hex_encode(data_ref v)
 	return r;
 }
 
+
 std::string uri_decode(str_ref v)
 {
 	std::string r;
@@ -76,7 +82,7 @@ std::string uri_decode(str_ref v)
 		char c = v[i];
 		switch (c)
 		{
-		case '%':
+			case '%':
 			{
 				if ((ssize_t)(i + 2) >= (ssize_t)v.size())
 					return std::string();
@@ -84,15 +90,16 @@ std::string uri_decode(str_ref v)
 				r += hex_decode(l) << 4 | hex_decode(v[++i]);
 				break;
 			}
-		case '+':
-			r += ' ';
-			break;
-		default:
-			r += c;
+			case '+':
+				r += ' ';
+				break;
+			default:
+				r += c;
 		}
 	}
 	return r;
 }
+
 
 std::string uri_encode(str_ref v)
 {
@@ -106,23 +113,24 @@ std::string uri_encode(str_ref v)
 		{
 			switch (c)
 			{
-			case ' ':
-				r += '+';
-				break;
-			case '-':
-			case ',':
-			case '.':
-			case '@':
-			case '_':
-				r += c;
-				break;
-			default:
-				r += "%" + hex_encode(2, c);
+				case ' ':
+					r += '+';
+					break;
+				case '-':
+				case ',':
+				case '.':
+				case '@':
+				case '_':
+					r += c;
+					break;
+				default:
+					r += "%" + hex_encode(2, c);
 			}
 		}
 	}
 	return r;
 }
+
 
 bool is_private_ipa(int a)
 {
@@ -131,6 +139,7 @@ bool is_private_ipa(int a)
 		|| (ntohl(a) & 0xfff00000) == 0xac100000
 		|| (ntohl(a) & 0xffff0000) == 0xc0a80000;
 }
+
 
 static std::string peer_id2a(const std::string& name, const std::string& peer_id, int i)
 {
@@ -142,6 +151,7 @@ static std::string peer_id2a(const std::string& name, const std::string& peer_id
 	return name + peer_id.substr(i);
 }
 
+
 std::string peer_id2a(const std::string& v)
 {
 	if (v.length() != 20)
@@ -150,46 +160,47 @@ std::string peer_id2a(const std::string& v)
 	{
 		switch (v[0])
 		{
-		case '-':
-			if (v[1] == 'A' && v[2] == 'Z')
-				return peer_id2a("Azureus ", v, 3);
-			if (v[1] == 'B' && v[2] == 'C')
-				return peer_id2a("BitComet ", v, 3);
-			if (v[1] == 'U' && v[2] == 'T')
-				return peer_id2a("uTorrent ", v, 3);
-			if (v[1] == 'T' && v[2] == 'S')
-				return peer_id2a("TorrentStorm ", v, 3);
-			break;
-		case 'A':
-			return peer_id2a("ABC ", v, 1);
-		case 'M':
-			return peer_id2a("Mainline ", v, 1);
-		case 'S':
-			return peer_id2a("Shadow ", v, 1);
-		case 'T':
-			return peer_id2a("BitTornado ", v, 1);
-		case 'X':
-			if (v[1] == 'B' && v[2] == 'T')
-				return peer_id2a("XBT Client ", v, 3) + (v.find_first_not_of("0123456789ABCDEFGHIJKLMNOPQRSTUVWYXZabcdefghijklmnopqrstuvwyxz", 8) == std::string::npos ? "" : " (fake)");
-			break;
+			case '-':
+				if (v[1] == 'A' && v[2] == 'Z')
+					return peer_id2a("Azureus ", v, 3);
+				if (v[1] == 'B' && v[2] == 'C')
+					return peer_id2a("BitComet ", v, 3);
+				if (v[1] == 'U' && v[2] == 'T')
+					return peer_id2a("uTorrent ", v, 3);
+				if (v[1] == 'T' && v[2] == 'S')
+					return peer_id2a("TorrentStorm ", v, 3);
+				break;
+			case 'A':
+				return peer_id2a("ABC ", v, 1);
+			case 'M':
+				return peer_id2a("Mainline ", v, 1);
+			case 'S':
+				return peer_id2a("Shadow ", v, 1);
+			case 'T':
+				return peer_id2a("BitTornado ", v, 1);
+			case 'X':
+				if (v[1] == 'B' && v[2] == 'T')
+					return peer_id2a("XBT Client ", v, 3) + (v.find_first_not_of("0123456789ABCDEFGHIJKLMNOPQRSTUVWYXZabcdefghijklmnopqrstuvwyxz", 8) == std::string::npos ? "" : " (fake)");
+				break;
 		}
 	}
 	switch (v[0])
 	{
-	case '-':
-		if (v[1] == 'G' && v[2] == '3')
-			return "G3";
-		break;
-	case 'S':
-		if (v[1] == 5 && v[2] == 7 && v[3] >= 0 && v[3] < 10)
-			return "Shadow 57" + n(v[3]);
-		break;
-	case 'e':
-		if (v[1] == 'x' && v[2] == 'b' && v[3] == 'c' && v[4] >= 0 && v[4] < 10 && v[5] >= 0 && v[5] < 100)
-			return "BitComet " + n(v[4]) + '.' + n(v[5] / 10) + n(v[5] % 10);
+		case '-':
+			if (v[1] == 'G' && v[2] == '3')
+				return "G3";
+			break;
+		case 'S':
+			if (v[1] == 5 && v[2] == 7 && v[3] >= 0 && v[3] < 10)
+				return "Shadow 57" + n(v[3]);
+			break;
+		case 'e':
+			if (v[1] == 'x' && v[2] == 'b' && v[3] == 'c' && v[4] >= 0 && v[4] < 10 && v[5] >= 0 && v[5] < 100)
+				return "BitComet " + n(v[4]) + '.' + n(v[5] / 10) + n(v[5] % 10);
 	}
 	return "Unknown";
 }
+
 
 std::string duration2a(float v)
 {
@@ -210,6 +221,7 @@ std::string duration2a(float v)
 		sprintf(d, "%.1f seconds", v);
 	return d;
 }
+
 
 void xbt_syslog(const std::string& v)
 {

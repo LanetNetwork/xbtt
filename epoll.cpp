@@ -8,10 +8,12 @@ Cepoll::~Cepoll()
 		close(m_fd);
 }
 
+
 int Cepoll::create()
 {
 	return m_fd = epoll_create(1);
 }
+
 
 int Cepoll::ctl(int op, int fd, int events, void* p)
 {
@@ -20,6 +22,7 @@ int Cepoll::ctl(int op, int fd, int events, void* p)
 	e.events = events;
 	return epoll_ctl(m_fd, op, fd, &e);
 }
+
 
 int Cepoll::wait(epoll_event* events, int maxevents, int timeout)
 {

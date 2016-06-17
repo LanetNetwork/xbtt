@@ -12,113 +12,113 @@
 template <class T, class U>
 class data_ref_base : public boost::iterator_range<T>
 {
-public:
-	data_ref_base()
-	{
-		clear();
-	}
-
-	template<class V>
-	data_ref_base(const V& v, typename boost::enable_if<typename boost::is_class<V> >::type* = 0)
-	{
-		if (v.end() != v.begin())
-			assign(&*v.begin(), v.end() - v.begin() + &*v.begin());
-		else
+	public:
+		data_ref_base()
+		{
 			clear();
-	}
+		}
 
-	template<class V>
-	data_ref_base(V& v, typename boost::enable_if<typename boost::is_class<V> >::type* = 0)
-	{
-		if (v.end() != v.begin())
-			assign(&*v.begin(), v.end() - v.begin() + &*v.begin());
-		else
-			clear();
-	}
+		template<class V>
+			data_ref_base(const V& v, typename boost::enable_if<typename boost::is_class<V> >::type* = 0)
+		{
+			if (v.end() != v.begin())
+				assign(&*v.begin(), v.end() - v.begin() + &*v.begin());
+			else
+				clear();
+		}
 
-	explicit data_ref_base(const char* v)
-	{
-		if (v)
-			assign(v, strlen(v));
-		else
-			clear();
-	}
+		template<class V>
+			data_ref_base(V& v, typename boost::enable_if<typename boost::is_class<V> >::type* = 0)
+		{
+			if (v.end() != v.begin())
+				assign(&*v.begin(), v.end() - v.begin() + &*v.begin());
+			else
+				clear();
+		}
 
-	data_ref_base(U begin, U end)
-	{
-		assign(begin, end);
-	}
+		explicit data_ref_base(const char* v)
+		{
+			if (v)
+				assign(v, strlen(v));
+			else
+				clear();
+		}
 
-	data_ref_base(U begin, size_t size)
-	{
-		assign(begin, size);
-	}
+		data_ref_base(U begin, U end)
+		{
+			assign(begin, end);
+		}
 
-	void assign(U begin, U end)
-	{
-		static_cast<base_t&>(*this) = base_t(reinterpret_cast<T>(begin), reinterpret_cast<T>(end));
-	}
+		data_ref_base(U begin, size_t size)
+		{
+			assign(begin, size);
+		}
 
-	void assign(U begin, size_t size)
-	{
-		assign(begin, reinterpret_cast<T>(begin) + size);
-	}
+		void assign(U begin, U end)
+		{
+			static_cast<base_t&>(*this) = base_t(reinterpret_cast<T>(begin), reinterpret_cast<T>(end));
+		}
 
-	void set_begin(U v)
-	{
-		assign(v, base_t::end());
-	}
+		void assign(U begin, size_t size)
+		{
+			assign(begin, reinterpret_cast<T>(begin) + size);
+		}
 
-	void set_end(U v)
-	{
-		assign(base_t::begin(), v);
-	}
+		void set_begin(U v)
+		{
+			assign(v, base_t::end());
+		}
 
-	void clear()
-	{
-		assign(T(NULL), T(NULL));
-	}
+		void set_end(U v)
+		{
+			assign(base_t::begin(), v);
+		}
 
-	T data() const
-	{
-		return base_t::begin();
-	}
+		void clear()
+		{
+			assign(T(NULL), T(NULL));
+		}
 
-	template<class V>
-	data_ref_base find0(V v) const
-	{
-		data_ref_base t = *this;
-		while (!t.empty() && t.front() != v)
-			t.pop_front();
-		return t;
-	}
+		T data() const
+		{
+			return base_t::begin();
+		}
 
-	float f() const
-	{
-		return to_float(*this);
-	}
+		template<class V>
+			data_ref_base find0(V v) const
+		{
+			data_ref_base t = *this;
+			while (!t.empty() && t.front() != v)
+				t.pop_front();
+			return t;
+		}
 
-	long long i() const
-	{
-		return to_int(*this);
-	}
+		float f() const
+		{
+			return to_float(*this);
+		}
 
-	const std::string s() const
-	{
-		return std::string(reinterpret_cast<const char*>(data()), base_t::size());
-	}
+		long long i() const
+		{
+			return to_int(*this);
+		}
 
-	data_ref_base substr(size_t pos)
-	{
-		return data_ref_base(base_t::begin() + pos, base_t::size() - pos);
-	}
+		const std::string s() const
+		{
+			return std::string(reinterpret_cast<const char*>(data()), base_t::size());
+		}
 
-	data_ref_base substr(size_t pos, size_t sz)
-	{
-		return data_ref_base(base_t::begin() + pos, sz);
-	}
-private:
-	typedef boost::iterator_range<T> base_t;
+		data_ref_base substr(size_t pos)
+		{
+			return data_ref_base(base_t::begin() + pos, base_t::size() - pos);
+		}
+
+		data_ref_base substr(size_t pos, size_t sz)
+		{
+			return data_ref_base(base_t::begin() + pos, sz);
+		}
+	private:
+		typedef boost::iterator_range<T> base_t;
 };
 
 typedef data_ref_base<const unsigned char*, const void*> data_ref;
@@ -134,12 +134,14 @@ inline size_t memcpy(void* d, data_ref s)
 	return s.size();
 }
 
+
 inline size_t memcpy(mutable_data_ref d, data_ref s)
 {
 	assert(d.size() >= s.size());
 	memcpy(d.data(), s.data(), s.size());
 	return s.size();
 }
+
 
 inline int eat(str_ref& s, char v)
 {
@@ -149,6 +151,7 @@ inline int eat(str_ref& s, char v)
 	return 0;
 }
 
+
 inline str_ref read_until(str_ref& is, char sep)
 {
 	const char* a = is.begin();
@@ -156,6 +159,7 @@ inline str_ref read_until(str_ref& is, char sep)
 	is.set_begin(b == is.end() ? b : b + 1);
 	return str_ref(a, b);
 }
+
 
 inline float to_float(data_ref v)
 {
@@ -170,6 +174,7 @@ inline float to_float(data_ref v)
 	}
 	return 0;
 }
+
 
 template<class T>
 static int try_parse(T& d, str_ref s)
@@ -188,12 +193,14 @@ static int try_parse(T& d, str_ref s)
 	return 0;
 }
 
+
 template<class T>
 static T parse(str_ref s)
 {
 	T d;
 	return try_parse(d, s) ? 0 : d;
 }
+
 
 template<class T>
 static void parse(T& d, str_ref s)
@@ -202,10 +209,12 @@ static void parse(T& d, str_ref s)
 		d = 0;
 }
 
+
 inline long long to_int(str_ref v)
 {
 	return parse<long long>(v);
 }
+
 
 inline const std::string to_string(str_ref v)
 {

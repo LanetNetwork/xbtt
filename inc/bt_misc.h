@@ -36,10 +36,12 @@ inline long long htonll(long long v)
 	return b << 32 | static_cast<long long>(a[4]) << 24 | a[5] << 16 | a[6] << 8 | a[7];
 }
 
+
 inline long long ntohll(long long v)
 {
 	return htonll(v);
 }
+
 
 enum
 {

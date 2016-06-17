@@ -5,20 +5,23 @@
 #include "database.h"
 
 Csql_query::Csql_query(Cdatabase& database, std::string v) :
-	m_database(database),
-	m_in(std::move(v))
+m_database(database),
+m_in(std::move(v))
 {
 }
+
 
 Csql_result Csql_query::execute() const
 {
 	return m_database.query(read());
 }
 
+
 int Csql_query::execute_nothrow() const
 {
 	return m_database.query_nothrow(read());
 }
+
 
 std::string Csql_query::replace_names(const std::string& v) const
 {
@@ -42,10 +45,12 @@ std::string Csql_query::replace_names(const std::string& v) const
 	return r;
 }
 
+
 std::string Csql_query::read() const
 {
 	return m_out + replace_names(m_in);
 }
+
 
 void Csql_query::operator=(std::string v)
 {
@@ -53,10 +58,12 @@ void Csql_query::operator=(std::string v)
 	m_out.clear();
 }
 
+
 void Csql_query::operator+=(const std::string& v)
 {
 	m_in += v;
 }
+
 
 Csql_query& Csql_query::p_name(const std::string& v0)
 {
@@ -68,6 +75,7 @@ Csql_query& Csql_query::p_name(const std::string& v0)
 	p_raw(r);
 	return *this;
 }
+
 
 Csql_query& Csql_query::p_raw(data_ref v)
 {
@@ -81,6 +89,7 @@ Csql_query& Csql_query::p_raw(data_ref v)
 	return *this;
 }
 
+
 Csql_query& Csql_query::operator()(long long v)
 {
 	char b[21];
@@ -88,6 +97,7 @@ Csql_query& Csql_query::operator()(long long v)
 	p_raw(data_ref(b));
 	return *this;
 }
+
 
 Csql_query& Csql_query::operator()(str_ref v)
 {

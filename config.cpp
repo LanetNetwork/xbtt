@@ -6,16 +6,19 @@ Cconfig::Cconfig()
 	fill_maps(NULL);
 }
 
+
 Cconfig::Cconfig(const Cconfig& v)
 {
 	fill_maps(&v);
 }
+
 
 const Cconfig& Cconfig::operator=(const Cconfig& v)
 {
 	fill_maps(&v);
 	return *this;
 }
+
 
 void Cconfig::fill_maps(const Cconfig* v)
 {
@@ -83,6 +86,7 @@ void Cconfig::fill_maps(const Cconfig* v)
 	}
 }
 
+
 int Cconfig::set(const std::string& name, const std::string& value)
 {
 	if (t_attribute<std::string>* i = find_ptr(m_attributes_string, name))
@@ -97,6 +101,7 @@ int Cconfig::set(const std::string& name, const std::string& value)
 	return 0;
 }
 
+
 int Cconfig::set(const std::string& name, int value)
 {
 	if (t_attribute<int>* i = find_ptr(m_attributes_int, name))
@@ -107,6 +112,7 @@ int Cconfig::set(const std::string& name, int value)
 		return set(name, static_cast<bool>(value));
 	return 0;
 }
+
 
 int Cconfig::set(const std::string& name, bool value)
 {

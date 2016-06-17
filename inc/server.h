@@ -5,75 +5,75 @@
 
 class Cstats
 {
-public:
-	long long announced() const
-	{
-		return announced_http + announced_udp;
-	}
+	public:
+		long long announced() const
+		{
+			return announced_http + announced_udp;
+		}
 
-	long long scraped() const
-	{
-		return scraped_http + scraped_udp;
-	}
+		long long scraped() const
+		{
+			return scraped_http + scraped_udp;
+		}
 
-	long long accept_errors = 0;
-	long long accepted_tcp = 0;
-	long long announced_http = 0;
-	long long announced_udp = 0;
-	long long received_udp = 0;
-	long long rejected_tcp = 0;
-	long long scraped_full = 0;
-	long long scraped_http = 0;
-	long long scraped_multi = 0;
-	long long scraped_udp = 0;
-	long long sent_udp = 0;
-	long long slow_tcp = 0;
-	time_t start_time = time(NULL);
+		long long accept_errors = 0;
+		long long accepted_tcp = 0;
+		long long announced_http = 0;
+		long long announced_udp = 0;
+		long long received_udp = 0;
+		long long rejected_tcp = 0;
+		long long scraped_full = 0;
+		long long scraped_http = 0;
+		long long scraped_multi = 0;
+		long long scraped_udp = 0;
+		long long sent_udp = 0;
+		long long slow_tcp = 0;
+		time_t start_time = time(NULL);
 };
 
 class peer_key_c
 {
-public:
-	peer_key_c(int host, int uid)
-	{
-		host_ = host;
+	public:
+		peer_key_c(int host, int uid)
+		{
+			host_ = host;
 #ifdef PEERS_KEY
-		uid_ = uid;
+			uid_ = uid;
 #else
-		(void)uid;
+			(void)uid;
 #endif
-	}
+		}
 
-	bool operator==(peer_key_c v) const
-	{
+		bool operator==(peer_key_c v) const
+		{
 #ifdef PEERS_KEY
-		return host_ == v.host_ && uid_ == v.uid_;
+			return host_ == v.host_ && uid_ == v.uid_;
 #else
-		return host_ == v.host_;
+			return host_ == v.host_;
 #endif
-	}
+		}
 
-	bool operator<(peer_key_c v) const
-	{
+		bool operator<(peer_key_c v) const
+		{
 #ifdef PEERS_KEY
-		return host_ < v.host_ || host_ == v.host_ && uid_ < v.uid_;
+			return host_ < v.host_ || host_ == v.host_ && uid_ < v.uid_;
 #else
-		return host_ < v.host_;
+			return host_ < v.host_;
 #endif
-	}
+		}
 
-	friend std::size_t hash_value(const peer_key_c& v)
-	{
-		std::size_t seed = boost::hash_value(v.host_);
+		friend std::size_t hash_value(const peer_key_c& v)
+		{
+			std::size_t seed = boost::hash_value(v.host_);
 #ifdef PEERS_KEY
-		boost::hash_combine(seed, v.uid_);
+			boost::hash_combine(seed, v.uid_);
 #endif
-		return seed;
-	}
+			return seed;
+		}
 
-	int host_;
+		int host_;
 #ifdef PEERS_KEY
-	int uid_;
+		int uid_;
 #endif
 };
 

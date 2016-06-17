@@ -4,10 +4,11 @@
 #include <sha1.h>
 #include "server.h"
 
-Ctransaction::Ctransaction(const Csocket& s) : 
-	m_s(s)
+Ctransaction::Ctransaction(const Csocket& s) :
+m_s(s)
 {
 }
+
 
 long long Ctransaction::connection_id() const
 {
@@ -19,6 +20,7 @@ long long Ctransaction::connection_id() const
 	Csha1(data_ref(s, cb_s)).read(d);
 	return read_int(8, d);
 }
+
 
 void Ctransaction::recv()
 {
@@ -39,21 +41,22 @@ void Ctransaction::recv()
 			return;
 		switch (read_int(4, b + uti_action, b + r))
 		{
-		case uta_connect:
-			if (r >= utic_size)
-				send_connect(data_ref(b, r));
-			break;
-		case uta_announce:
-			if (r >= utia_size)
-				send_announce(data_ref(b, r));
-			break;
-		case uta_scrape:
-			if (r >= utis_size)
-				send_scrape(data_ref(b, r));
-			break;
+			case uta_connect:
+				if (r >= utic_size)
+					send_connect(data_ref(b, r));
+				break;
+			case uta_announce:
+				if (r >= utia_size)
+					send_announce(data_ref(b, r));
+				break;
+			case uta_scrape:
+				if (r >= utis_size)
+					send_scrape(data_ref(b, r));
+				break;
 		}
 	}
 }
+
 
 void Ctransaction::send_connect(data_ref r)
 {
@@ -66,6 +69,7 @@ void Ctransaction::send_connect(data_ref r)
 	write_int(8, d + utoc_connection_id, connection_id());
 	send(data_ref(d, utoc_size));
 }
+
 
 void Ctransaction::send_announce(data_ref r)
 {
@@ -107,6 +111,7 @@ void Ctransaction::send_announce(data_ref r)
 	send(data_ref(d, peers.begin()));
 }
 
+
 void Ctransaction::send_scrape(data_ref r)
 {
 	if (read_int(8, &r[uti_connection_id], r.end()) != connection_id())
@@ -140,6 +145,7 @@ void Ctransaction::send_scrape(data_ref r)
 	send(data_ref(d, w));
 }
 
+
 void Ctransaction::send_error(data_ref r, const std::string& msg)
 {
 	char d[2 << 10];
@@ -148,6 +154,7 @@ void Ctransaction::send_error(data_ref r, const std::string& msg)
 	memcpy(d + utoe_size, msg);
 	send(data_ref(d, utoe_size + msg.size()));
 }
+
 
 void Ctransaction::send(data_ref b)
 {

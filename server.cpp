@@ -9,7 +9,7 @@
 namespace boost
 {
 	template<class T, size_t N>
-	struct hash<std::array<T, N>>
+		struct hash<std::array<T, N>>
 	{
 		size_t operator()(const std::array<T, N>& v) const
 		{
@@ -17,6 +17,7 @@ namespace boost
 		}
 	};
 }
+
 
 static volatile bool g_sig_term = false;
 boost::ptr_list<Cconnection> m_connections;
@@ -49,11 +50,12 @@ bool m_read_users_wait_time;
 bool m_use_sql;
 
 void accept(const Csocket&);
-	
+
 static void async_query(const std::string& v)
 {
 	m_database.query_nothrow(v);
 }
+
 
 static void sig_handler(int v)
 {
@@ -61,33 +63,34 @@ static void sig_handler(int v)
 		g_sig_term = true;
 }
 
+
 class Ctcp_listen_socket : public Cclient
 {
-public:
-	explicit Ctcp_listen_socket(const Csocket& s)
-	{
-		m_s = s;
-	}
+	public:
+		explicit Ctcp_listen_socket(const Csocket& s)
+		{
+			m_s = s;
+		}
 
-	virtual void process_events(int)
-	{
-		accept(m_s);
-	}
+		virtual void process_events(int)
+		{
+			accept(m_s);
+		}
 };
 
 class Cudp_listen_socket : public Cclient
 {
-public:
-	explicit Cudp_listen_socket(const Csocket& s)
-	{
-		m_s = s;
-	}
+	public:
+		explicit Cudp_listen_socket(const Csocket& s)
+		{
+			m_s = s;
+		}
 
-	virtual void process_events(int events)
-	{
-		if (events & EPOLLIN)
-			Ctransaction(m_s).recv();
-	}
+		virtual void process_events(int events)
+		{
+			if (events & EPOLLIN)
+				Ctransaction(m_s).recv();
+		}
 };
 
 const Cconfig& srv_config()
@@ -95,35 +98,42 @@ const Cconfig& srv_config()
 	return m_config;
 }
 
+
 Cdatabase& srv_database()
 {
 	return m_database;
 }
+
 
 const t_torrent* find_torrent(const std::string& id)
 {
 	return find_ptr(m_torrents, to_array<char, 20>(id));
 }
 
+
 t_user* find_user_by_uid(int v)
 {
 	return find_ptr(m_users, v);
 }
+
 
 long long srv_secret()
 {
 	return m_secret;
 }
 
+
 Cstats& srv_stats()
 {
 	return m_stats;
 }
 
+
 time_t srv_time()
 {
 	return m_time;
 }
+
 
 static void read_config()
 {
@@ -173,6 +183,7 @@ static void read_config()
 	m_read_config_time = srv_time();
 }
 
+
 static void read_db_torrents_sql()
 {
 	try
@@ -189,7 +200,7 @@ static void read_db_torrents_sql()
 		if (m_config.m_auto_register && !m_torrents.empty())
 			return;
 		Csql_result result = Csql_query(m_database, "select info_hash, @completed, @fid, ctime from @files where @fid >= ?")(m_fid_end).execute();
-		// m_torrents.reserve(m_torrents.size() + result.size());
+// m_torrents.reserve(m_torrents.size() + result.size());
 		while (Csql_row row = result.fetch_row())
 		{
 			m_fid_end = std::max<int>(m_fid_end, row[2].i() + 1);
@@ -208,6 +219,7 @@ static void read_db_torrents_sql()
 	{
 	}
 }
+
 
 static void read_db_torrents()
 {
@@ -234,6 +246,7 @@ static void read_db_torrents()
 	}
 }
 
+
 static void read_db_users()
 {
 	m_read_db_users_time = srv_time();
@@ -253,7 +266,7 @@ static void read_db_users()
 			q += ", wait_time";
 		q += " from @users";
 		Csql_result result = q.execute();
-		// m_users.reserve(result.size());
+// m_users.reserve(result.size());
 		for (auto& i : m_users)
 			i.second.marked = true;
 		m_users_torrent_passes.clear();
@@ -290,10 +303,12 @@ static void read_db_users()
 	}
 }
 
+
 static const std::string& db_name(const std::string& v)
 {
 	return m_database.name(v);
 }
+
 
 static void write_db_torrents()
 {
@@ -350,6 +365,7 @@ static void write_db_torrents()
 	}
 }
 
+
 static void write_db_users()
 {
 	m_write_db_users_time = srv_time();
@@ -383,6 +399,7 @@ static void write_db_users()
 	}
 }
 
+
 static int test_sql()
 {
 	if (!m_use_sql)
@@ -399,7 +416,7 @@ static int test_sql()
 			Csql_query(m_database, "select id, ipa, uid, mtime from @scrape_log where 0").execute();
 		Csql_query(m_database, "select @uid, torrent_pass_version, downloaded, uploaded from @users where 0").execute();
 		Csql_query(m_database, "update @files set @leechers = 0, @seeders = 0").execute();
-		// Csql_query(m_database, "update @files_users set active = 0").execute();
+// Csql_query(m_database, "update @files_users set active = 0").execute();
 		m_read_users_can_leech = Csql_query(m_database, "show columns from @users like 'can_leech'").execute();
 		m_read_users_peers_limit = Csql_query(m_database, "show columns from @users like 'peers_limit'").execute();
 		m_read_users_torrent_pass = Csql_query(m_database, "show columns from @users like 'torrent_pass'").execute();
@@ -411,6 +428,7 @@ static int test_sql()
 	}
 	return 1;
 }
+
 
 static void clean_up(t_torrent& t, time_t time)
 {
@@ -427,12 +445,14 @@ static void clean_up(t_torrent& t, time_t time)
 	}
 }
 
+
 static void clean_up()
 {
 	for (auto& i : m_torrents)
 		clean_up(i.second, srv_time() - static_cast<int>(1.5 * m_config.m_announce_interval));
 	m_clean_up_time = srv_time();
 }
+
 
 int srv_run(const std::string& table_prefix, bool use_sql, const std::string& conf_file)
 {
@@ -473,7 +493,7 @@ int srv_run(const std::string& table_prefix, bool use_sql, const std::string& co
 				strcpy(afa.af_name, "httpready");
 				if (l.setsockopt(SOL_SOCKET, SO_ACCEPTFILTER, &afa, sizeof(afa)))
 					std::cerr << "setsockopt failed: " << Csocket::error2a(WSAGetLastError()) << std::endl;
-#elif 0 // TCP_DEFER_ACCEPT
+#elif 0							  // TCP_DEFER_ACCEPT
 				if (l.setsockopt(IPPROTO_TCP, TCP_DEFER_ACCEPT, 90))
 					std::cerr << "setsockopt failed: " << Csocket::error2a(WSAGetLastError()) << std::endl;
 #endif
@@ -561,6 +581,7 @@ int srv_run(const std::string& table_prefix, bool use_sql, const std::string& co
 	return 0;
 }
 
+
 void accept(const Csocket& l)
 {
 	sockaddr_in a;
@@ -599,6 +620,7 @@ void accept(const Csocket& l)
 		}
 	}
 }
+
 
 std::string srv_insert_peer(const Ctracker_input& v, bool udp, t_user* user)
 {
@@ -693,6 +715,7 @@ std::string srv_insert_peer(const Ctracker_input& v, bool udp, t_user* user)
 	return std::string();
 }
 
+
 void t_torrent::select_peers(mutable_str_ref& d, const Ctracker_input& ti) const
 {
 	if (ti.m_event == Ctracker_input::e_stopped)
@@ -726,6 +749,7 @@ void t_torrent::select_peers(mutable_str_ref& d, const Ctracker_input& ti) const
 	}
 }
 
+
 std::string srv_select_peers(const Ctracker_input& ti)
 {
 	const t_torrent* f = find_torrent(ti.m_info_hash);
@@ -738,6 +762,7 @@ std::string srv_select_peers(const Ctracker_input& ti)
 	return (boost::format("d8:completei%de10:incompletei%de8:intervali%de12:min intervali%de5:peers%d:%se")
 		% f->seeders % f->leechers % m_config.m_announce_interval % m_config.m_announce_interval % peers.size() % peers).str();
 }
+
 
 std::string srv_scrape(const Ctracker_input& ti, t_user* user)
 {
@@ -775,6 +800,7 @@ std::string srv_scrape(const Ctracker_input& ti, t_user* user)
 	return d;
 }
 
+
 static void debug(const t_torrent& t, std::ostream& os)
 {
 	for (auto& i : t.peers)
@@ -787,6 +813,7 @@ static void debug(const t_torrent& t, std::ostream& os)
 			<< "<td>" << hex_encode(i.second.peer_id);
 	}
 }
+
 
 std::string srv_debug(const Ctracker_input& ti)
 {
@@ -811,6 +838,7 @@ std::string srv_debug(const Ctracker_input& ti)
 	os << "</table>";
 	return os.str();
 }
+
 
 std::string srv_statistics()
 {
@@ -878,6 +906,7 @@ std::string srv_statistics()
 	return os.str();
 }
 
+
 t_user* find_user_by_torrent_pass(str_ref v, str_ref info_hash)
 {
 	if (v.size() != 32)
@@ -889,4 +918,3 @@ t_user* find_user_by_torrent_pass(str_ref v, str_ref info_hash)
 	}
 	return find_ptr2(m_users_torrent_passes, to_array<char, 32>(v));
 }
-

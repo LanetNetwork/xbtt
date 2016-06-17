@@ -4,15 +4,15 @@ class Cserver;
 
 class Cclient
 {
-public:
-	virtual void process_events(int) = 0;
+	public:
+		virtual void process_events(int) = 0;
 
-	virtual ~Cclient() {}
+		virtual ~Cclient() {}
 
-	const Csocket& s() const
-	{
-		return m_s;
-	}
-protected:
-	Csocket m_s;
+		const Csocket& s() const
+		{
+			return m_s;
+		}
+	protected:
+		Csocket m_s;
 };

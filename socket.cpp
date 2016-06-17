@@ -23,6 +23,7 @@ Csocket::Csocket(SOCKET s)
 		m_source = std::make_shared<Csocket_source>(s);
 }
 
+
 /*
 int Csocket::accept(int& h, int& p)
 {
@@ -34,19 +35,20 @@ int Csocket::accept(int& h, int& p)
 		return r;
 	h = a.sin_addr.s_addr;
 	p = a.sin_port;
-	return r;
+return r;
 }
 */
 
 int Csocket::bind(int h, int p)
 {
 	sockaddr_in a;
-  memset(&a, 0, sizeof(a));
+	memset(&a, 0, sizeof(a));
 	a.sin_family = AF_INET;
 	a.sin_addr.s_addr = h;
 	a.sin_port = p;
 	return ::bind(*this, reinterpret_cast<sockaddr*>(&a), sizeof(sockaddr_in));
 }
+
 
 int Csocket::blocking(bool v)
 {
@@ -58,25 +60,29 @@ int Csocket::blocking(bool v)
 #endif
 }
 
+
 void Csocket::close()
 {
 	m_source.reset();
 }
 
+
 int Csocket::connect(int h, int p)
 {
 	sockaddr_in a;
-  memset(&a, 0, sizeof(a));
+	memset(&a, 0, sizeof(a));
 	a.sin_family = AF_INET;
 	a.sin_addr.s_addr = h;
 	a.sin_port = p;
 	return ::connect(*this, reinterpret_cast<sockaddr*>(&a), sizeof(sockaddr_in));
 }
 
+
 int Csocket::listen()
 {
 	return ::listen(*this, SOMAXCONN);
 }
+
 
 const Csocket& Csocket::open(int t, bool _blocking)
 {
@@ -87,30 +93,36 @@ const Csocket& Csocket::open(int t, bool _blocking)
 	return *this;
 }
 
+
 int Csocket::recv(mutable_str_ref d) const
 {
 	return ::recv(*this, d.data(), d.size(), MSG_NOSIGNAL);
 }
+
 
 int Csocket::recvfrom(mutable_str_ref d, sockaddr* a, socklen_t* cb_a) const
 {
 	return ::recvfrom(*this, d.data(), d.size(), MSG_NOSIGNAL, a, cb_a);
 }
 
+
 int Csocket::send(str_ref s) const
 {
 	return ::send(*this, s.data(), s.size(), MSG_NOSIGNAL);
 }
+
 
 int Csocket::sendto(str_ref s, const sockaddr* a, socklen_t cb_a) const
 {
 	return ::sendto(*this, s.data(), s.size(), MSG_NOSIGNAL, a, cb_a);
 }
 
+
 int Csocket::getsockopt(int level, int name, void* v, socklen_t& cb_v)
 {
 	return ::getsockopt(*this, level, name, reinterpret_cast<char*>(v), &cb_v);
 }
+
 
 int Csocket::getsockopt(int level, int name, int& v)
 {
@@ -118,15 +130,18 @@ int Csocket::getsockopt(int level, int name, int& v)
 	return getsockopt(level, name, &v, cb_v);
 }
 
+
 int Csocket::setsockopt(int level, int name, const void* v, int cb_v)
 {
 	return ::setsockopt(*this, level, name, reinterpret_cast<const char*>(v), cb_v);
 }
 
+
 int Csocket::setsockopt(int level, int name, int v)
 {
 	return setsockopt(level, name, &v, sizeof(int));
 }
+
 
 int Csocket::get_host(const std::string& name)
 {
@@ -134,57 +149,59 @@ int Csocket::get_host(const std::string& name)
 	return e && e->h_addrtype == AF_INET && e->h_length == sizeof(in_addr) && e->h_addr_list ? *reinterpret_cast<int*>(*e->h_addr_list) : INADDR_NONE;
 }
 
+
 std::string Csocket::error2a(int v)
 {
 	switch (v)
 	{
-	case WSAEACCES: return "EACCES";
-	case WSAEADDRINUSE: return "EADDRINUSE";
-	case WSAEADDRNOTAVAIL: return "EADDRNOTAVAIL";
-	case WSAEAFNOSUPPORT: return "EAFNOSUPPORT";
-	case WSAEALREADY: return "EALREADY";
-	case WSAEBADF: return "EBADF";
-	case WSAECONNABORTED: return "ECONNABORTED";
-	case WSAECONNREFUSED: return "ECONNREFUSED";
-	case WSAECONNRESET: return "ECONNRESET";
-	case WSAEDESTADDRREQ: return "EDESTADDRREQ";
-	case WSAEDQUOT: return "EDQUOT";
-	case WSAEFAULT: return "EFAULT";
-	case WSAEHOSTDOWN: return "EHOSTDOWN";
-	case WSAEHOSTUNREACH: return "EHOSTUNREACH";
-	case WSAEINPROGRESS: return "EINPROGRESS";
-	case WSAEINTR: return "EINTR";
-	case WSAEINVAL: return "EINVAL";
-	case WSAEISCONN: return "EISCONN";
-	case WSAELOOP: return "ELOOP";
-	case WSAEMFILE: return "EMFILE";
-	case WSAEMSGSIZE: return "EMSGSIZE";
-	case WSAENAMETOOLONG: return "ENAMETOOLONG";
-	case WSAENETDOWN: return "ENETDOWN";
-	case WSAENETRESET: return "ENETRESET";
-	case WSAENETUNREACH: return "ENETUNREACH";
-	case WSAENOBUFS: return "ENOBUFS";
-	case WSAENOPROTOOPT: return "ENOPROTOOPT";
-	case WSAENOTCONN: return "ENOTCONN";
-	case WSAENOTEMPTY: return "ENOTEMPTY";
-	case WSAENOTSOCK: return "ENOTSOCK";
-	case WSAEOPNOTSUPP: return "EOPNOTSUPP";
-	case WSAEPFNOSUPPORT: return "EPFNOSUPPORT";
-	case WSAEPROTONOSUPPORT: return "EPROTONOSUPPORT";
-	case WSAEPROTOTYPE: return "EPROTOTYPE";
-	case WSAEREMOTE: return "EREMOTE";
-	case WSAESHUTDOWN: return "ESHUTDOWN";
-	case WSAESOCKTNOSUPPORT: return "ESOCKTNOSUPPORT";
-	case WSAESTALE: return "ESTALE";
-	case WSAETIMEDOUT: return "ETIMEDOUT";
-	case WSAETOOMANYREFS: return "ETOOMANYREFS";
-	case WSAEUSERS: return "EUSERS";
-	case WSAEWOULDBLOCK: return "EWOULDBLOCK";
+		case WSAEACCES: return "EACCES";
+		case WSAEADDRINUSE: return "EADDRINUSE";
+		case WSAEADDRNOTAVAIL: return "EADDRNOTAVAIL";
+		case WSAEAFNOSUPPORT: return "EAFNOSUPPORT";
+		case WSAEALREADY: return "EALREADY";
+		case WSAEBADF: return "EBADF";
+		case WSAECONNABORTED: return "ECONNABORTED";
+		case WSAECONNREFUSED: return "ECONNREFUSED";
+		case WSAECONNRESET: return "ECONNRESET";
+		case WSAEDESTADDRREQ: return "EDESTADDRREQ";
+		case WSAEDQUOT: return "EDQUOT";
+		case WSAEFAULT: return "EFAULT";
+		case WSAEHOSTDOWN: return "EHOSTDOWN";
+		case WSAEHOSTUNREACH: return "EHOSTUNREACH";
+		case WSAEINPROGRESS: return "EINPROGRESS";
+		case WSAEINTR: return "EINTR";
+		case WSAEINVAL: return "EINVAL";
+		case WSAEISCONN: return "EISCONN";
+		case WSAELOOP: return "ELOOP";
+		case WSAEMFILE: return "EMFILE";
+		case WSAEMSGSIZE: return "EMSGSIZE";
+		case WSAENAMETOOLONG: return "ENAMETOOLONG";
+		case WSAENETDOWN: return "ENETDOWN";
+		case WSAENETRESET: return "ENETRESET";
+		case WSAENETUNREACH: return "ENETUNREACH";
+		case WSAENOBUFS: return "ENOBUFS";
+		case WSAENOPROTOOPT: return "ENOPROTOOPT";
+		case WSAENOTCONN: return "ENOTCONN";
+		case WSAENOTEMPTY: return "ENOTEMPTY";
+		case WSAENOTSOCK: return "ENOTSOCK";
+		case WSAEOPNOTSUPP: return "EOPNOTSUPP";
+		case WSAEPFNOSUPPORT: return "EPFNOSUPPORT";
+		case WSAEPROTONOSUPPORT: return "EPROTONOSUPPORT";
+		case WSAEPROTOTYPE: return "EPROTOTYPE";
+		case WSAEREMOTE: return "EREMOTE";
+		case WSAESHUTDOWN: return "ESHUTDOWN";
+		case WSAESOCKTNOSUPPORT: return "ESOCKTNOSUPPORT";
+		case WSAESTALE: return "ESTALE";
+		case WSAETIMEDOUT: return "ETIMEDOUT";
+		case WSAETOOMANYREFS: return "ETOOMANYREFS";
+		case WSAEUSERS: return "EUSERS";
+		case WSAEWOULDBLOCK: return "EWOULDBLOCK";
 	}
 	char b[12];
 	sprintf(b, "%d", v);
 	return b;
 }
+
 
 std::string Csocket::inet_ntoa(int v)
 {
@@ -192,6 +209,7 @@ std::string Csocket::inet_ntoa(int v)
 	a.s_addr = v;
 	return ::inet_ntoa(a);
 }
+
 
 int Csocket::start_up()
 {

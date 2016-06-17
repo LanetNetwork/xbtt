@@ -22,9 +22,10 @@ shared_data xcc_z::gunzip(data_ref s)
 		&& Z_OK == inflateInit2(&stream, -MAX_WBITS)
 		&& Z_STREAM_END == inflate(&stream, Z_FINISH)
 		&& Z_OK == inflateEnd(&stream)
-		? d 
+		? d
 		: shared_data();
 }
+
 
 shared_data xcc_z::gzip(data_ref s)
 {
@@ -59,6 +60,7 @@ shared_data xcc_z::gzip(data_ref s)
 	w = write_int_le(4, w, s.size());
 	return d.substr(0, w - d.data());
 }
+
 
 /*
 void xcc_z::gzip_out(data_ref s)

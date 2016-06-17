@@ -29,6 +29,7 @@ static int main1()
 	return srv_run(config.m_mysql_table_prefix, config.m_mysql_host != "-", g_conf_file);
 }
 
+
 int main(int argc, char* argv[])
 {
 	if (argc >= 2)
