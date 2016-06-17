@@ -523,16 +523,9 @@ int srv_run(const std::string& table_prefix, bool use_sql, const std::string& co
 		if (sigaction(SIGPIPE, &act, NULL))
 			std::cerr << "sigaction failed" << std::endl;
 	}
-#ifdef EPOLL
 	std::array<epoll_event, 64> events;
-#else
-	fd_set fd_read_set;
-	fd_set fd_write_set;
-	fd_set fd_except_set;
-#endif
 	while (!g_sig_term)
 	{
-#ifdef EPOLL
 		int r = m_epoll.wait(events.data(), events.size(), 5000);
 		if (r == -1)
 			std::cerr << "epoll_wait failed: " << errno << std::endl;
@@ -552,53 +545,6 @@ int srv_run(const std::string& table_prefix, bool use_sql, const std::string& co
 					i++;
 			}
 		}
-#else
-		FD_ZERO(&fd_read_set);
-		FD_ZERO(&fd_write_set);
-		FD_ZERO(&fd_except_set);
-		int n = 0;
-		for (auto& i : m_connections)
-		{
-			int z = i.pre_select(&fd_read_set, &fd_write_set);
-			n = std::max(n, z);
-		}
-		for (auto& i : lt)
-		{
-			FD_SET(i.s(), &fd_read_set);
-			n = std::max<int>(n, i.s());
-		}
-		for (auto& i : lu)
-		{
-			FD_SET(i.s(), &fd_read_set);
-			n = std::max<int>(n, i.s());
-		}
-		timeval tv;
-		tv.tv_sec = 5;
-		tv.tv_usec = 0;
-		if (select(n + 1, &fd_read_set, &fd_write_set, &fd_except_set, &tv) == SOCKET_ERROR)
-			std::cerr << "select failed: " << Csocket::error2a(WSAGetLastError()) << std::endl;
-		else
-		{
-			m_time = ::time(NULL);
-			for (auto& i : lt)
-			{
-				if (FD_ISSET(i.s(), &fd_read_set))
-					accept(i.s());
-			}
-			for (auto& i : lu)
-			{
-				if (FD_ISSET(i.s(), &fd_read_set))
-					Ctransaction(i.s()).recv();
-			}
-			for (auto i = m_connections.begin(); i != m_connections.end(); )
-			{
-				if (i->post_select(&fd_read_set, &fd_write_set))
-					i = m_connections.erase(i);
-				else
-					i++;
-			}
-		}
-#endif
 		if (srv_time() - m_read_config_time > m_config.m_read_config_interval)
 			read_config();
 		else if (srv_time() - m_clean_up_time > m_config.m_clean_up_interval)

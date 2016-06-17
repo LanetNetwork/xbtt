@@ -26,13 +26,6 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-scripts)
 find_package(MySQL REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
-
-include(CheckIncludeFileCXX)
-check_include_file_cxx(sys/epoll.h HAVE_SYS_EPOLL)
-if(HAVE_SYS_EPOLL)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEPOLL")
-endif()
-
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -ggdb -pg")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -DNDEBUG")
 

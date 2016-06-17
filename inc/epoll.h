@@ -2,29 +2,7 @@
 
 #include <boost/noncopyable.hpp>
 
-#ifdef EPOLL
 #include <sys/epoll.h>
-#else
-enum
-{
-	EPOLLIN = 1,
-	EPOLLOUT = 2,
-	EPOLLPRI = 4,
-	EPOLLERR = 8,
-	EPOLLHUP = 0x10,
-	EPOLLET = 0x20,
-	EPOLLONESHOT = 0x40,
-};
-
-enum
-{
-	EPOLL_CTL_ADD = 1,
-	EPOLL_CTL_MOD = 2,
-	EPOLL_CTL_DEL = 4,
-};
-
-typedef void epoll_event;
-#endif
 
 class Cepoll: boost::noncopyable
 {
