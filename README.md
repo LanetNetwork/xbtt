@@ -77,6 +77,7 @@ Enter the following commands in a terminal.
 The tracker reads it's configuration from the file xbt_tracker.conf and the SQL table xbt_config. There is no need to insert default values into this table.
 
 | name | default value |
+|------|---------------|
 | announce_interval | 1800 |
 | anonymous_connect | 1 |
 | anonymous_announce | 1 |
