@@ -207,7 +207,7 @@ std::string b2a(long long v, const char* postfix)
 	const char* a[] = {"", " k", " m", " g", " t", " p", " e", " z", " y"};
 	w += sprintf(w, "%s", a[l]);
 	if (postfix)
-		w += sprintf(w, "%s%s", l ? "" : " ", postfix);
+		sprintf(w, "%s%s", l ? "" : " ", postfix);
 	return d;
 }
 
@@ -239,7 +239,7 @@ std::string n2a(long long v, const char* postfix)
 	const char* a [] = { "", " k", " m", " g", " t", " p", " e", " z", " y" };
 	w += sprintf(w, "%s", a[l]);
 	if (postfix)
-		w += sprintf(w, "%s%s", l ? "" : " ", postfix);
+		sprintf(w, "%s%s", l ? "" : " ", postfix);
 	return d;
 }
 

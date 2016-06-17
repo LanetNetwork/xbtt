@@ -140,7 +140,6 @@ shared_data Cxif_key::vdata() const
 	shared_data d(sizeof(t_xif_header_fast) + cb_d);
 	t_xif_header_fast& header = *reinterpret_cast<t_xif_header_fast*>(d.data());
 	compress(d.data() + sizeof(t_xif_header_fast), &cb_d, s.data(), s.size());
-	w = d.data() + sizeof(t_xif_header_fast) + cb_d;
 	header.id = file_id;
 	header.version = file_version_fast;
 	header.size_uncompressed = size;
