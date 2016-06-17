@@ -96,7 +96,7 @@ int Cxif_key::load_key(const byte* data, size_t size)
 	{
 		read_p += sizeof(t_xif_header_old) - 4;
 		load_old(read_p);
-		error = size != read_p - data;
+		error = (ssize_t)size != read_p - data;
 	}
 	else
 	{
@@ -116,7 +116,7 @@ int Cxif_key::load_key(const byte* data, size_t size)
 				if (header.version == file_version_fast && !error)
 				{
 					read_p = data + sizeof(t_xif_header_fast) + header.size_compressed;
-					error = size != read_p - data;
+					error = (ssize_t)size != read_p - data;
 				}
 			}
 		}
@@ -124,7 +124,7 @@ int Cxif_key::load_key(const byte* data, size_t size)
 		{
 			read_p = data + (header.version == file_version_fast ? sizeof(t_xif_header_fast) : sizeof(t_xif_header_old));
 			load_new(read_p);
-			error = size != read_p - data;
+			error = (ssize_t)size != read_p - data;
 		}
 	}
 	return error;

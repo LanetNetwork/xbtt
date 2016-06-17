@@ -300,7 +300,7 @@ int Cbvalue::pre_read() const
 shared_data Cbvalue::read() const
 {
 	shared_data d(pre_read());
-  BOOST_VERIFY(read(d.data()) == d.size());
+  BOOST_VERIFY(read(d.data()) == (ssize_t)d.size());
 	return d;
 }
 
