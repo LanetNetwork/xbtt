@@ -32,12 +32,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -DNDEBUG")
 include_directories(inc)
 
 add_executable(xbtt
-	alerts.cpp
 	bt_misc.cpp
-	bt_torrent.cpp
-	bt_tracker_account.cpp
-	bt_tracker_url.cpp
-	bvalue.cpp
 	config.cpp
 	connection.cpp
 	database.cpp
@@ -46,17 +41,10 @@ add_executable(xbtt
 	sha1.cpp
 	socket.cpp
 	sql_query.cpp
-	stdafx.cpp
-	stream_reader.cpp
-	stream_writer.cpp
 	tracker_input.cpp
 	transaction.cpp
-	virtual_binary.cpp
 	xbtt.cpp
-	xcc_z.cpp
-	xif_key.cpp
-	xif_key_r.cpp
-	xif_value.cpp)
+	xcc_z.cpp)
 
 target_link_libraries(xbtt
 	pthread
