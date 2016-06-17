@@ -25,7 +25,7 @@ endif (PKG_CONFIG_FOUND)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-scripts)
 find_package(MySQL REQUIRED)
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -W -Wall -Wextra -pedantic")
+set(CMAKE_CXX_FLAGS "-std=c++11 -W -Wall -Wextra -pedantic -Wwrite-strings -Winit-self -Wcast-qual -Wpointer-arith -Wstrict-aliasing -Wformat=2 -Wmissing-declarations -Wmissing-include-dirs -Wno-unused-parameter -Wuninitialized")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -ggdb -pg")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -DNDEBUG")
 

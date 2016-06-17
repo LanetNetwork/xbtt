@@ -125,7 +125,7 @@ time_t srv_time()
 	return m_time;
 }
 
-void read_config()
+static void read_config()
 {
 	if (m_use_sql)
 	{
@@ -173,7 +173,7 @@ void read_config()
 	m_read_config_time = srv_time();
 }
 
-void read_db_torrents_sql()
+static void read_db_torrents_sql()
 {
 	try
 	{
@@ -209,7 +209,7 @@ void read_db_torrents_sql()
 	}
 }
 
-void read_db_torrents()
+static void read_db_torrents()
 {
 	m_read_db_torrents_time = srv_time();
 	if (m_use_sql)
@@ -234,7 +234,7 @@ void read_db_torrents()
 	}
 }
 
-void read_db_users()
+static void read_db_users()
 {
 	m_read_db_users_time = srv_time();
 	if (!m_use_sql)
@@ -290,12 +290,12 @@ void read_db_users()
 	}
 }
 
-const std::string& db_name(const std::string& v)
+static const std::string& db_name(const std::string& v)
 {
 	return m_database.name(v);
 }
 
-void write_db_torrents()
+static void write_db_torrents()
 {
 	m_write_db_torrents_time = srv_time();
 	if (!m_use_sql)
@@ -350,7 +350,7 @@ void write_db_torrents()
 	}
 }
 
-void write_db_users()
+static void write_db_users()
 {
 	m_write_db_users_time = srv_time();
 	if (!m_use_sql)
@@ -383,7 +383,7 @@ void write_db_users()
 	}
 }
 
-int test_sql()
+static int test_sql()
 {
 	if (!m_use_sql)
 		return 0;
@@ -412,7 +412,7 @@ int test_sql()
 	return 1;
 }
 
-void clean_up(t_torrent& t, time_t time)
+static void clean_up(t_torrent& t, time_t time)
 {
 	for (auto i = t.peers.begin(); i != t.peers.end(); )
 	{
@@ -427,7 +427,7 @@ void clean_up(t_torrent& t, time_t time)
 	}
 }
 
-void clean_up()
+static void clean_up()
 {
 	for (auto& i : m_torrents)
 		clean_up(i.second, srv_time() - static_cast<int>(1.5 * m_config.m_announce_interval));
@@ -505,9 +505,6 @@ int srv_run(const std::string& table_prefix, bool use_sql, const std::string& co
 	read_db_users();
 	write_db_torrents();
 	write_db_users();
-#ifndef NDEBUG
-	// test_announce();
-#endif
 	if (m_config.m_daemon)
 	{
 		if (daemon(true, false))
@@ -778,7 +775,7 @@ std::string srv_scrape(const Ctracker_input& ti, t_user* user)
 	return d;
 }
 
-void debug(const t_torrent& t, std::ostream& os)
+static void debug(const t_torrent& t, std::ostream& os)
 {
 	for (auto& i : t.peers)
 	{
@@ -898,25 +895,3 @@ void srv_term()
 	g_sig_term = true;
 }
 
-void test_announce()
-{
-	t_user* u = find_ptr(m_users, 1);
-	Ctracker_input i;
-	i.m_info_hash = "IHIHIHIHIHIHIHIHIHIH";
-	memcpy(i.m_peer_id.data(), str_ref("PIPIPIPIPIPIPIPIPIPI"));
-	i.m_ipa = htonl(0x7f000063);
-	i.m_port = 54321;
-	std::cout << srv_insert_peer(i, false, u) << std::endl;
-	write_db_torrents();
-	write_db_users();
-	m_time++;
-	i.m_uploaded = 1 << 30;
-	i.m_downloaded = 1 << 20;
-	std::cout << srv_insert_peer(i, false, u) << std::endl;
-	write_db_torrents();
-	write_db_users();
-	m_time += 3600;
-	clean_up();
-	write_db_torrents();
-	write_db_users();
-}

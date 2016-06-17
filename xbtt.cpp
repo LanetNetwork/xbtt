@@ -5,7 +5,7 @@
 std::string g_conf_file = "xbt_tracker.conf";
 const char* g_service_name = "XBT Tracker";
 
-int main1()
+static int main1()
 {
 	srand(static_cast<int>(time(NULL)));
 	Cconfig config;

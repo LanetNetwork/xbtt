@@ -158,7 +158,7 @@ bool operator==(str_ref a, const char* b)
 	return a.size() == strlen(b) && !memcmp(a.data(), b, a.size());
 }
 
-bb_t get_next(str_ref& s, str_ref& a0)
+static bb_t get_next(str_ref& s, str_ref& a0)
 {
 	if (!s)
 		return bb_end;
