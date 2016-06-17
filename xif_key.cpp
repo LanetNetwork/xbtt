@@ -89,7 +89,7 @@ int Cxif_key::load_key(const byte* data, size_t size)
 	const t_xif_header_fast& header = *reinterpret_cast<const t_xif_header_fast*>(read_p);
 	if (size < sizeof(t_xif_header_old)
 		|| header.id != file_id
-		|| header.version != file_version_old && header.version != file_version_new && header.version != file_version_fast)
+		|| (header.version != file_version_old && header.version != file_version_new && header.version != file_version_fast))
 		return 1;
 	int error = 0;
 	if (header.version == file_version_old)
