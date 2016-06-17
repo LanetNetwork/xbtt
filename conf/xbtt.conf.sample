@@ -1,0 +1,18 @@
+mysql_host = host.example.com
+mysql_user = xbttuser
+mysql_password = xbttuserpassword
+mysql_database = xbttdb
+
+pid_file = /run/xbtt.pid
+
+announce_interval = 1800
+anonymous_connect = 1
+anonymous_announce = 1
+anonymous_scrape = 1
+auto_register = 1
+
+clean_up_interval = 180
+
+full_scrape = 0
+gzip_debug = 1
+gzip_scrape = 1

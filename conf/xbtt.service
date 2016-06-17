@@ -1,0 +1,14 @@
+[Unit]
+Description=XBT Torrents ReTracker
+After=network.target
+
+[Service]
+Type=forking
+PrivateTmp=true
+LimitNOFILE=65535
+PIDFile=/run/xbtt.pid
+ExecStart=/usr/bin/xbtt --conf_file /etc/xbtt/xbtt.conf
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
