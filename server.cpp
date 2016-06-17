@@ -64,7 +64,7 @@ static void sig_handler(int v)
 class Ctcp_listen_socket : public Cclient
 {
 public:
-	Ctcp_listen_socket(const Csocket& s)
+	explicit Ctcp_listen_socket(const Csocket& s)
 	{
 		m_s = s;
 	}
@@ -78,7 +78,7 @@ public:
 class Cudp_listen_socket : public Cclient
 {
 public:
-	Cudp_listen_socket(const Csocket& s)
+	explicit Cudp_listen_socket(const Csocket& s)
 	{
 		m_s = s;
 	}
