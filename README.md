@@ -12,25 +12,6 @@ The tracker stores stats in a MySQL database/table. Version >= 5 is required. Cr
 
 * * *
 
-## Installing under Windows
-
-1.  Download XBT Tracker from [http://sourceforge.net/project/showfiles.php?group_id=94951&package_id=113737](http://sourceforge.net/project/showfiles.php?group_id=94951&package_id=113737).
-2.  Run the executable.
-3.  Update xbt_tracker.conf with the database, host, user and pass of your MySQL setup.
-
-There are two ways to run the tracker under Windows (NT, 2000, XP and 2003). The first way is to run the tracker manually, like every other application. The second way is to run the tracker as service. The advantage of this way is that it also runs when no user is logged in.
-
-1.  Open a command window (Start - Run - cmd).
-2.  Run net start "XBT Tracker"
-
-* * *
-
-## Starting under Windows
-
-Just start the executable. An empty DOS window should appear.
-
-* * *
-
 ## Installing under Linux
 
 The following commands can be used to install the dependencies on Debian. The g++ version should be at least 3.4.
