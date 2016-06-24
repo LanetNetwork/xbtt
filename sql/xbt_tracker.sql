@@ -1,89 +1,52 @@
--- create table if not exists xbt_announce_log
--- (
-	-- id int not null auto_increment,
-	-- ipa int unsigned not null,
-	-- port int not null,
-	-- event int not null,
-	-- info_hash binary(20) not null,
-	-- peer_id binary(20) not null,
-	-- downloaded bigint unsigned not null,
-	-- left0 bigint unsigned not null,
-	-- uploaded bigint unsigned not null,
-	-- uid int not null,
-	-- mtime int not null,
-	-- primary key (id)
--- ) engine = myisam;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `xbt_config` (
+  `name` varchar(255) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create table if not exists xbt_config
-(
-	name varchar(255) not null,
-	value varchar(255) not null
-);
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `xbt_files` (
+  `fid` int(11) NOT NULL AUTO_INCREMENT,
+  `info_hash` binary(20) NOT NULL DEFAULT '0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',
+  `leechers` int(11) NOT NULL DEFAULT '0',
+  `seeders` int(11) NOT NULL DEFAULT '0',
+  `completed` int(11) NOT NULL DEFAULT '0',
+  `flags` int(11) NOT NULL DEFAULT '0',
+  `mtime` int(11) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`fid`),
+  UNIQUE KEY `info_hash` (`info_hash`)
+) ENGINE=InnoDB AUTO_INCREMENT=8047994 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- create table if not exists xbt_deny_from_clients
--- (
-	-- peer_id char(20) not null
--- );
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `xbt_files_users` (
+  `fid` int(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `active` tinyint(4) NOT NULL,
+  `announced` int(11) NOT NULL,
+  `completed` int(11) NOT NULL,
+  `downloaded` bigint(20) unsigned NOT NULL,
+  `left` bigint(20) unsigned NOT NULL,
+  `uploaded` bigint(20) unsigned NOT NULL,
+  `mtime` int(11) NOT NULL,
+  PRIMARY KEY (`fid`,`uid`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- create table if not exists xbt_deny_from_hosts
--- (
-	-- begin int unsigned not null,
-	-- end int unsigned not null
--- );
-
-create table if not exists xbt_files
-(
-	fid int not null auto_increment,
-	info_hash binary(20) not null,
-	leechers int not null default 0,
-	seeders int not null default 0,
-	completed int not null default 0,
-	flags int not null default 0,
-	mtime int not null,
-	ctime int not null,
-	primary key (fid),
-	unique key (info_hash)
-);
-
-create table if not exists xbt_files_users
-(
-	fid int not null,
-	uid int not null,
-	active tinyint not null,
-	announced int not null,
-	completed int not null,
-	downloaded bigint unsigned not null,
-	`left` bigint unsigned not null,
-	uploaded bigint unsigned not null,
-	mtime int not null,
-	unique key (fid, uid),
-	key (uid)
-);
-
--- create table if not exists xbt_scrape_log
--- (
-	-- id int not null auto_increment,
-	-- ipa int unsigned not null,
-	-- uid int not null,
-	-- mtime int not null,
-	-- primary key (id)
--- ) engine = myisam;
-
-create table if not exists xbt_users
-(
-	uid int not null auto_increment,
-	-- can_leech tinyint not null default 1,
-	-- wait_time int not null default 0,
-	-- peers_limit int not null default 0,
-	-- torrent_pass char(32) not null,
-	torrent_pass_version int not null default 0,
-	downloaded bigint unsigned not null default 0,
-	uploaded bigint unsigned not null default 0,
-	primary key (uid)
-);
-
--- alter table xbt_files_users add down_rate int unsigned not null;
--- alter table xbt_files_users add up_rate int unsigned not null;
-
--- alter table xbt_files_users add foreign key (fid) references xbt_files (fid) on delete cascade;
--- alter table xbt_files_users add foreign key (uid) references xbt_users (uid) on delete cascade;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `xbt_users` (
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `torrent_pass_version` int(11) NOT NULL DEFAULT '0',
+  `downloaded` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `uploaded` bigint(20) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
